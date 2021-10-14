@@ -7,29 +7,34 @@ root = Tk()
 root.geometry("1000x2000")
 root.title("Map Quest")
 
-heading = Label(text="Map Quest API", bg="black",
-                fg="white", width="500", height="5")
+heading = Label(text="Map Quest API", bg="#333a56",
+                fg="white", font="15", width="500", height="5")
 heading.pack()
 
+#Starting Location Input 
 LabelLocation = Label(text="Enter your Current Location* ",
-                      font="Helvetica 15", anchor='nw')
+                      font="Helvetica 15", fg="#333a56", anchor='nw')
 LabelLocation.pack(pady=20)
-location = Entry(root, width=50)
+location = Entry(root, width=50, font=5)
 location.pack(pady=20)
 
+#Destination Output
 LabelDestination = Label(
-    text="Enter your Destination Location* ", font="Helvetica 15")
+    text="Enter your Destination Location* ", font="Helvetica 15", fg="#333a56")
 LabelDestination.pack(pady=20)
-destination = Entry(root, width=50)
+destination = Entry(root, width=50, font=5)
 destination.pack(pady=20)
 
+#Funtion to clear inputs
+def clear():
+    location.delete(0,END)
+    destination.delete(0,END)
 
+#Funtion to display directions 
 def onClick():
     while True:
 
-        url = main_api + \
-            urllib.parse.urlencode(
-                {"key": key, "from": location, "to": destination})
+        url = main_api + urllib.parse.urlencode({"key": key, "from": location, "to": destination})
         print("URL ", (url))
         json_data = requests.get(url).json()
         json_status = json_data["info"]["statuscode"]
@@ -53,13 +58,13 @@ def onClick():
                 + "Status Code: " + str(json_status) + "; Invalid user inputs for one or bothlocations."\
                 + "**********************************************\n"
             myLabel3 = Label(root, text=argument3)
-            mylabel3.pack()
+            myLabel3.pack()
         elif json_status == 611:
             argument4 = "**********************************************"\
                 + "Status Code: " + str(json_status) + "; Missing an entry for one or bothlocations."\
                 + "**********************************************\n"
             myLabel4 = Label(root, text=argument4)
-            mylabel4.pack()
+            myLabel4.pack()
         else:
             argument5 = "************************************************************************"\
                 + "For Staus Code: " + str(json_status) + "; Refer to:"\
@@ -69,9 +74,16 @@ def onClick():
             myResult.pack(pady=20)
         break
 
+#Submit Button 
+myButton = Button(root, text="Submit",width=50, command=onClick, fg="#ffffff", bg="#333a56", font=3)
+myButton.pack(pady=(20,5))
 
-myButton = Button(root, text="Submit", command=onClick)
-myButton.pack()
+#Clear Button
+button_clear = Button(root, text="Clear",width=50, command=clear, fg="#ffffff", bg="#333a56", font=3)
+button_clear.pack(pady=(0,5))
 
+#Quit Button
+button_quit = Button(root, text="Quit",width=50, command=root.destroy, fg="#ffffff", bg="#333a56", font=3)
+button_quit.pack()
 
 root.mainloop()
